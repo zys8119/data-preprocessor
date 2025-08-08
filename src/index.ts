@@ -131,7 +131,34 @@ export type SerializeDefDataReturn<T, M extends SerializeDef> = T extends object
         : never;
     }
   : T;
-
+export type SerializeGetAllDets =
+  | string
+  | {
+      name: string;
+      as?: string;
+      default?: any;
+      convertType?: SerializeGetConvertType;
+      required?: boolean | SerializeGetMessage;
+    };
+export type SerializeGetAllDetsMap<
+  T extends readonly SerializeGetAllDets[],
+  D extends Readonly<Record<any, any>>
+> =
+  | {
+      [K in T[number] as K extends { as: string }
+        ? K["as"]
+        : K extends { name: string }
+        ? K["name"]
+        : K extends string
+        ? K
+        : string]: K extends { convertType: string }
+        ? any
+        : K extends { convertType: (...args: any[]) => any }
+        ? ReturnType<K["convertType"]>
+        : K extends { default: any }
+        ? K["default"]
+        : D[K];
+    };
 export class Serialize {
   static defaultConfig = {
     requiredMessage: (fieldName: string) => {
@@ -258,19 +285,19 @@ export class Serialize {
     return data;
   }
 
-  static getAll(
-    data: SerializeGetData<Parameters<typeof get>>[0],
-    gets: Array<
-      | string
-      | {
-          name: string;
-          as?: string;
-          default?: any;
-          convertType?: SerializeGetConvertType;
-          required?: boolean | SerializeGetMessage;
-        }
-    >
-  ) {
+  /**
+   * 获取所有数据
+   * @param data
+   * @param gets
+   */
+  static getAll<
+    T extends readonly SerializeGetAllDets[] | SerializeGetAllDets[],
+    D extends SerializeGetData<Parameters<typeof get>>[0]
+  >(
+    data: D,
+    gets: T
+  ): Omit<D, keyof SerializeGetAllDetsMap<T, D>> & SerializeGetAllDetsMap<T, D>;
+  static getAll(data: any, gets: any) {
     const res: Record<string, any> = {};
     while (gets.length) {
       const e = gets.shift()!;
@@ -288,7 +315,7 @@ export class Serialize {
         ...args
       );
     }
-    return res;
+    return Object.assign({}, data, res);
   }
 
   /**
