@@ -4,6 +4,9 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+overrides:
+  data-preprocessor: link:../../Library/pnpm/global/5/node_modules/data-preprocessor
+
 importers:
 
   .:

@@ -1,6 +1,6 @@
 {
   "name": "data-preprocessor",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -9,7 +9,8 @@
     "release": "tsc && npm publish"
   },
   "files": [
-    "dist"
+    "dist",
+    "README.md"
   ],
   "keywords": [],
   "author": "zys8119",

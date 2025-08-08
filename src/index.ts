@@ -258,6 +258,39 @@ export class Serialize {
     return data;
   }
 
+  static getAll(
+    data: SerializeGetData<Parameters<typeof get>>[0],
+    gets: Array<
+      | string
+      | {
+          name: string;
+          as?: string;
+          default?: any;
+          convertType?: SerializeGetConvertType;
+          required?: boolean | SerializeGetMessage;
+        }
+    >
+  ) {
+    const res: Record<string, any> = {};
+    while (gets.length) {
+      const e = gets.shift()!;
+      const args = typeof e === "string" ? [true, data, e] : [];
+      if (typeof e === "object") {
+        args.push(e.required === undefined ? true : e.required);
+        if (e.convertType) {
+          args.push(e.convertType);
+        }
+        args.push(data);
+        args.push(e.name);
+        args.push(e.default);
+      }
+      res[typeof e === "string" ? e : e.as || e.name] = (Serialize.get as any)(
+        ...args
+      );
+    }
+    return res;
+  }
+
   /**
    * 获取数据
    * @param args
