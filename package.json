@@ -1,0 +1,25 @@
+{
+  "name": "data-preprocessor",
+  "version": "1.0.0",
+  "description": "",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "release": "tsc && npm publish"
+  },
+  "files": [
+    "dist"
+  ],
+  "keywords": [],
+  "author": "zys8119",
+  "license": "ISC",
+  "packageManager": "pnpm@10.12.1",
+  "devDependencies": {
+    "@types/lodash": "^4.17.20",
+    "typescript": "^5.9.2"
+  },
+  "dependencies": {
+    "lodash": "^4.17.21"
+  }
+}
